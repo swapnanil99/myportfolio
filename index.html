@@ -1,0 +1,3476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Swapnanil • Web Developer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Backend Developer skilled in Python, Django, REST APIs, and modern web technologies. Passionate about building robust server-side solutions." />
+  <meta name="keywords" content="backend developer, Python, Django, REST API, WebSocket, Redis, full-stack" />
+  <meta name="author" content="Swapnanil" />
+  <meta name="theme-color" content="#04050a" />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22></text></svg>" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #04050a;
+      --bg-soft: #0b0e19;
+      --bg-soft-2: #111426;
+      --accent: #ff6b6b;
+      --accent-2: #7d5cff;
+      --accent-3: #4df3ff;
+      --text: #f8f8ff;
+      --muted: #9ca3af;
+      --card-radius: 24px;
+      --shadow-soft: 0 24px 80px rgba(0, 0, 0, 0.65);
+    }
+
+    /* Light Mode Variables */
+    :root.light-mode {
+      --bg: #f8f9fa;
+      --bg-soft: #f0f2f5;
+      --bg-soft-2: #e8eaed;
+      --accent: #ef4444;
+      --accent-2: #8b5cf6;
+      --accent-3: #06b6d4;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --shadow-soft: 0 24px 80px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #151835 0, #04050a 52%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    body.light-mode {
+      background: radial-gradient(circle at top, #ffffff 0, #f8f9fa 52%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Scroll line / progress rail */
+    .scroll-rail {
+      position: fixed;
+      left: 32px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 60vh;
+      background: linear-gradient(to bottom, #1f2933, #020617);
+      border-radius: 999px;
+      overflow: visible;
+      z-index: 999;
+      transition: background 0.4s ease;
+    }
+
+    body.light-mode .scroll-rail {
+      background: linear-gradient(to bottom, #d1d5db, #e5e7eb);
+    }
+
+    .scroll-rail::before {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.28), transparent 70%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .rail-progress {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 0;
+      background: linear-gradient(to top, var(--accent), var(--accent-2), var(--accent-3));
+      border-radius: inherit;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.7);
+    }
+
+    .scroll-rail.active::before {
+      opacity: 1;
+    }
+
+    .rail-dot {
+      position: absolute;
+      left: 50%;
+      width: 14px;
+      height: 14px;
+      transform: translate(-50%, -50%);
+      border-radius: 999px;
+      border: 2px solid #4b5563;
+      background: #020617;
+      box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.0);
+      transition: all 0.25s ease;
+    }
+
+    body.light-mode .rail-dot {
+      border-color: #d1d5db;
+      background: #f3f4f6;
+    }
+
+    .rail-dot span {
+      position: absolute;
+      left: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      opacity: 0;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .rail-dot.active {
+      border-color: transparent;
+      background: radial-gradient(circle at center, #4df3ff, #7c3aed);
+      box-shadow: 0 0 16px rgba(59, 130, 246, 0.9);
+      transform: translate(-50%, -50%) scale(1.18);
+    }
+
+    .rail-dot.active span {
+      opacity: 1;
+      transform: translate(4px, -50%);
+      color: var(--text);
+    }
+
+    /* Layout */
+    .page-wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 24px 80px 96px;
+    }
+
+    @media (max-width: 900px) {
+      .scroll-rail {
+        display: none;
+      }
+
+      .page-wrap {
+        padding: 16px 18px 64px;
+      }
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.85);
+      position: sticky;
+      top: 16px;
+      z-index: 50;
+      transition: background 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    body.light-mode header {
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0, var(--accent-3), var(--accent-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 0 20px rgba(129, 140, 248, 0.7);
+    }
+
+    .logo span {
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    nav ul {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    nav a {
+      position: relative;
+      padding: 8px 16px;
+      color: var(--muted);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border-radius: 6px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-3));
+      border-radius: 999px;
+      transition: width 0.3s ease;
+      display: none;
+    }
+
+    nav a:hover {
+      color: var(--text);
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(56, 189, 248, 0.1));
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+      transform: translateY(-3px) scale(1.05);
+    }
+
+    nav a:hover::after {
+      width: 0;
+    }
+
+    body.light-mode nav a {
+      color: var(--muted);
+    }
+
+    body.light-mode nav a:hover {
+      color: var(--text);
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.08));
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle {
+      background: rgba(79, 70, 229, 0.2);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 999px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      transition: all 0.3s ease;
+      color: var(--text);
+    }
+
+    .theme-toggle:hover {
+      background: rgba(79, 70, 229, 0.35);
+      border-color: rgba(148, 163, 184, 0.5);
+      transform: scale(1.05);
+    }
+
+    body.light-mode .theme-toggle {
+      background: rgba(251, 146, 60, 0.15);
+      border-color: rgba(107, 114, 128, 0.3);
+    }
+
+    body.light-mode .theme-toggle:hover {
+      background: rgba(251, 146, 60, 0.25);
+      border-color: rgba(107, 114, 128, 0.5);
+    }
+
+    @media (max-width: 720px) {
+      header {
+        padding-inline: 16px;
+      }
+
+      nav ul {
+        gap: 12px;
+      }
+
+      nav li:nth-child(n+4) {
+        display: none;
+      }
+    }
+
+    /* HERO */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 40px;
+      align-items: center;
+      padding: 80px 8px 64px;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        text-align: center;
+        padding-top: 40px;
+      }
+    }
+
+    .avatar-wrap {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      border-radius: 999px;
+      margin-inline: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 20% 0, #4df3ff, #7c3aed, #0f172a);
+      box-shadow: 0 0 40px rgba(129, 140, 248, 0.7);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+    }
+
+    .avatar-wrap:hover {
+      transform: scale(1.08) rotate(5deg);
+      box-shadow: 0 0 60px rgba(129, 140, 248, 1), 0 0 100px rgba(124, 58, 237, 0.5);
+    }
+
+    .avatar-emoji {
+      font-size: 82px;
+      background: radial-gradient(circle at 30% 0, #e5e7eb, #9ca3af);
+      border-radius: 999px;
+      padding: 24px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+      transition: box-shadow 0.4s ease;
+      display: none;
+    }
+
+    body.light-mode .avatar-emoji {
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .avatar-vector {
+      width: 160px;
+      height: 160px;
+      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));
+      animation: float 3s ease-in-out infinite, rotate-slow 20s linear infinite;
+      transition: filter 0.4s ease;
+    }
+
+    body.light-mode .avatar-vector {
+      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.1));
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-15px);
+      }
+    }
+
+    @keyframes rotate-slow {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .floating-bracket {
+      animation: float-code 4s ease-in-out infinite;
+    }
+
+    @keyframes float-code {
+
+      0%,
+      100% {
+        opacity: 0.3;
+      }
+
+      50% {
+        opacity: 0.7;
+      }
+    }
+
+    .avatar-ring {
+      position: absolute;
+      inset: -12px;
+      border-radius: inherit;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-top-color: rgba(248, 250, 252, 0.7);
+      border-right-color: rgba(129, 140, 248, 0.9);
+      filter: blur(0.2px);
+      animation: spin 8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes blink {
+
+      0%,
+      49% {
+        opacity: 1;
+      }
+
+      50%,
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* Additional Animations */
+    @keyframes pulse-glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(79, 70, 229, 0.5), 0 0 40px rgba(79, 70, 229, 0.2);
+      }
+
+      50% {
+        box-shadow: 0 0 30px rgba(79, 70, 229, 0.8), 0 0 60px rgba(79, 70, 229, 0.4);
+      }
+    }
+
+    @keyframes slide-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slide-in-down {
+      from {
+        opacity: 0;
+        transform: translateY(-40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slide-in-left {
+      from {
+        opacity: 0;
+        transform: translateX(-40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slide-in-right {
+      from {
+        opacity: 0;
+        transform: translateX(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes bounce-in {
+      0% {
+        opacity: 0;
+        transform: scale(0.3);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+
+      70% {
+        transform: scale(0.9);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes float-bounce {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-12px);
+      }
+    }
+
+    @keyframes gradient-shift {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes scale-pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes text-shimmer {
+      0% {
+        background-position: -1000px 0;
+      }
+
+      100% {
+        background-position: 1000px 0;
+      }
+    }
+
+    @keyframes blur-in {
+      from {
+        opacity: 0;
+        filter: blur(10px);
+      }
+
+      to {
+        opacity: 1;
+        filter: blur(0px);
+      }
+    }
+
+    /* Animation utility classes */
+    .animate-slide-up {
+      animation: slide-in-up 0.8s ease-out forwards;
+    }
+
+    .animate-slide-down {
+      animation: slide-in-down 0.8s ease-out forwards;
+    }
+
+    .animate-slide-left {
+      animation: slide-in-left 0.8s ease-out forwards;
+    }
+
+    .animate-slide-right {
+      animation: slide-in-right 0.8s ease-out forwards;
+    }
+
+    .animate-bounce-in {
+      animation: bounce-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .animate-blur-in {
+      animation: blur-in 1s ease-out forwards;
+    }
+
+    .animate-pulse {
+      animation: scale-pulse 2s ease-in-out infinite;
+    }
+
+    .animate-float {
+      animation: float-bounce 3s ease-in-out infinite;
+    }
+
+    .animate-glow {
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    .hero-badge-dot {
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 12px rgba(34, 197, 94, 0.9);
+        transform: scale(1);
+      }
+
+      50% {
+        box-shadow: 0 0 20px rgba(34, 197, 94, 1.2);
+        transform: scale(1.1);
+      }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    body.light-mode .hero-badge {
+      background: rgba(255, 255, 255, 0.6);
+      border-color: rgba(107, 114, 128, 0.3);
+    }
+
+    .hero-badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0, #22c55e, #16a34a);
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.9);
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 3.5vw, 3.4rem);
+      line-height: 1.05;
+      margin-bottom: 16px;
+    }
+
+    .hero-title span.gradient {
+      background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 0.98rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 24px;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .tag-pill {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--muted);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: default;
+    }
+
+    .tag-pill:hover {
+      transform: translateY(-3px) scale(1.05);
+      background: rgba(168, 85, 247, 0.2);
+      border-color: rgba(168, 85, 247, 0.6);
+      box-shadow: 0 10px 25px rgba(168, 85, 247, 0.3);
+      color: rgba(168, 85, 247, 0.95);
+    }
+
+    body.light-mode .tag-pill {
+      border-color: rgba(107, 114, 128, 0.3);
+      color: rgba(75, 85, 99, 0.7);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 11px 20px;
+      font-size: 0.9rem;
+      border: 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+
+    .btn-primary {
+      background: radial-gradient(circle at 0 0, var(--accent-3), var(--accent-2));
+      color: #020617;
+      box-shadow: 0 16px 40px rgba(129, 140, 248, 0.7);
+    }
+
+    body.light-mode .btn-primary {
+      color: #ffffff;
+      box-shadow: 0 16px 40px rgba(139, 92, 246, 0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+    }
+
+    body.light-mode .btn-outline {
+      border-color: rgba(75, 85, 99, 0.4);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 22px 50px rgba(15, 23, 42, 0.9);
+    }
+
+    body.light-mode .btn:hover {
+      box-shadow: 0 22px 50px rgba(0, 0, 0, 0.15);
+    }
+
+    @media (max-width: 900px) {
+      .hero-actions {
+        justify-content: center;
+      }
+
+      .hero-sub {
+        margin-inline: auto;
+      }
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 80px;
+    }
+
+    .section-label {
+      font-size: 13px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 18px;
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 26px;
+    }
+
+    @media (max-width: 900px) {
+      .section-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(79, 70, 229, 0.26), transparent 65%), var(--bg-soft);
+      border-radius: var(--card-radius);
+      padding: 20px 22px;
+      border: 1px solid rgba(55, 65, 81, 0.7);
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
+    }
+
+    body.light-mode .card {
+      background: radial-gradient(circle at top left, rgba(139, 92, 246, 0.1), transparent 65%), var(--bg-soft);
+      border-color: rgba(107, 114, 128, 0.2);
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -120%;
+      background: conic-gradient(from 180deg, rgba(96, 165, 250, 0.0), rgba(96, 165, 250, 0.25), rgba(244, 114, 182, 0.0), rgba(52, 211, 153, 0.0));
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+      animation: spin 12s linear infinite;
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .about-text {
+      font-size: 0.93rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* Experience */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 26px;
+      transition: transform 0.3s ease, padding-left 0.3s ease;
+    }
+
+    .timeline-item:hover {
+      transform: translateX(8px);
+      padding-left: 30px;
+    }
+
+    .timeline-item:hover .timeline-dot {
+      transform: scale(1.4);
+      box-shadow: 0 0 25px rgba(251, 146, 60, 1.2);
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 4px;
+      bottom: -10px;
+      border-left: 1px dashed rgba(75, 85, 99, 0.8);
+    }
+
+    .timeline-item:last-child::before {
+      bottom: 8px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 3px;
+      top: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 0, #f97316, #7c3aed);
+      box-shadow: 0 0 16px rgba(251, 146, 60, 0.9);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+    }
+
+    .timeline-role {
+      font-weight: 500;
+      font-size: 0.98rem;
+    }
+
+    .timeline-company {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .timeline-date {
+      color: #6b7280;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 4px;
+    }
+
+    .timeline-desc {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* Tech stack */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 14px;
+    }
+
+    .stack-pill {
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.18), transparent 60%), #020617;
+      border-radius: 18px;
+      padding: 12px 12px;
+      border: 1px solid rgba(55, 65, 81, 0.8);
+      font-size: 0.86rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.9);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: default;
+    }
+
+    .stack-pill:hover {
+      transform: translateY(-6px) scale(1.04);
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.35), transparent 60%), #020617;
+      border-color: rgba(56, 189, 248, 0.6);
+      box-shadow: 0 15px 45px rgba(56, 189, 248, 0.5);
+    }
+
+    body.light-mode .stack-pill {
+      background: radial-gradient(circle at top, rgba(139, 92, 246, 0.08), transparent 60%), #ffffff;
+      border-color: rgba(107, 114, 128, 0.25);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+    }
+
+    .stack-label {
+      font-weight: 500;
+    }
+
+    .stack-tagline {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .stack-pill span.icon {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    /* Projects */
+    .projects-section-wrapper {
+      display: none;
+    }
+
+    /* Projects Filter/Tabs */
+    .projects-filter {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+
+    .filter-btn {
+      padding: 10px 20px;
+      border: 1.5px solid rgba(148, 163, 184, 0.3);
+      background: transparent;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .filter-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(56, 189, 248, 0.3));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 0;
+    }
+
+    .filter-btn:hover::before {
+      opacity: 1;
+    }
+
+    .filter-btn span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(56, 189, 248, 0.1));
+      border-color: rgba(79, 70, 229, 0.6);
+      color: var(--text);
+      box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    .filter-btn.active::before {
+      opacity: 1;
+    }
+
+    body.light-mode .filter-btn:hover,
+    body.light-mode .filter-btn.active {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.08));
+      border-color: rgba(139, 92, 246, 0.5);
+    }
+
+    /* Featured Projects Section */
+    .featured-projects {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+      transition: all 0.4s ease;
+      margin-bottom: 60px;
+    }
+
+    .featured-project-card {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.09), rgba(56, 189, 248, 0.04));
+      border: 1.5px solid rgba(148, 163, 184, 0.2);
+      transition: border-color 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      backdrop-filter: blur(10px);
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 18px;
+      align-items: center;
+      opacity: 1;
+      padding: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .featured-project-card {
+        grid-template-columns: 1fr;
+        padding: 12px;
+        gap: 14px;
+      }
+    }
+
+    body.light-mode .featured-project-card {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.07), rgba(6, 182, 212, 0.03));
+      border-color: rgba(107, 114, 128, 0.18);
+    }
+
+    body.light-mode .featured-project-card:hover {
+      border-color: rgba(139, 92, 246, 0.4);
+      box-shadow: 0 10px 28px rgba(139, 92, 246, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .featured-project-card:hover {
+      border-color: rgba(168, 85, 247, 0.5);
+      box-shadow: 0 10px 28px rgba(168, 85, 247, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transform: translateY(-3px);
+    }
+
+    .featured-project-image {
+      width: 100%;
+      height: 150px;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.14), rgba(59, 130, 246, 0.09));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 75px;
+      overflow: hidden;
+      position: relative;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border-radius: 10px;
+    }
+
+    .featured-project-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease, filter 0.6s ease;
+    }
+
+    .featured-project-card:hover .featured-project-image {
+      transform: scale(1.03);
+      box-shadow: 0 10px 30px rgba(168, 85, 247, 0.3);
+    }
+
+    .featured-project-card:hover .featured-project-image img {
+      transform: scale(1.15);
+      filter: brightness(1.15) saturate(1.2);
+    }
+
+    @media (max-width: 900px) {
+      .featured-project-image {
+        height: 130px;
+        font-size: 60px;
+      }
+    }
+
+    body.light-mode .featured-project-image {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.07));
+    }
+
+    .featured-project-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.06));
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        transform: translateX(-100%);
+      }
+
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    .featured-project-content {
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .featured-project-tag {
+      font-size: 8px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: rgba(168, 85, 247, 0.8);
+      margin-bottom: 0;
+      transition: color 0.4s ease;
+      background: rgba(168, 85, 247, 0.11);
+      padding: 2px 7px;
+      border-radius: 4px;
+      width: fit-content;
+    }
+
+    body.light-mode .featured-project-tag {
+      color: rgba(139, 92, 246, 0.75);
+      background: rgba(139, 92, 246, 0.07);
+    }
+
+    .featured-project-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 1px;
+      color: var(--text);
+      transition: color 0.4s ease;
+      line-height: 1.2;
+    }
+
+    .featured-project-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-bottom: 6px;
+      transition: color 0.4s ease;
+      flex: 1;
+    }
+
+    body.light-mode .featured-project-desc {
+      color: rgba(75, 85, 99, 0.75);
+    }
+
+    .featured-project-techs {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    .featured-project-tech {
+      font-size: 0.6rem;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: rgba(168, 85, 247, 0.11);
+      color: rgba(168, 85, 247, 0.8);
+      border: 0.5px solid rgba(168, 85, 247, 0.15);
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .featured-project-tech:hover {
+      background: rgba(168, 85, 247, 0.16);
+      transform: translateY(-0.5px);
+    }
+
+    body.light-mode .featured-project-tech {
+      background: rgba(139, 92, 246, 0.07);
+      color: rgba(139, 92, 246, 0.75);
+      border-color: rgba(139, 92, 246, 0.12);
+    }
+
+    body.light-mode .featured-project-tech:hover {
+      background: rgba(139, 92, 246, 0.12);
+    }
+
+    /* Regular Projects Grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .project-card {
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @media (max-width: 900px) {
+      .featured-projects {
+        grid-template-columns: 1fr;
+      }
+
+      .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .project-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+      backdrop-filter: blur(10px);
+      border: 1.5px solid;
+      min-height: 280px;
+      opacity: 1;
+    }
+
+    body.light-mode .project-card {
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Card 1: Purple gradient */
+    .project-card:nth-child(1) {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(139, 92, 246, 0.15));
+      border-color: rgba(168, 85, 247, 0.4);
+    }
+
+    body.light-mode .project-card:nth-child(1) {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(139, 92, 246, 0.05));
+      border-color: rgba(168, 85, 247, 0.25);
+    }
+
+    .project-card:nth-child(1):hover {
+      border-color: rgba(168, 85, 247, 0.8);
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(139, 92, 246, 0.25));
+      box-shadow: 0 20px 60px rgba(168, 85, 247, 0.4);
+      transform: translateY(-8px) scale(1.02);
+    }
+
+    body.light-mode .project-card:nth-child(1):hover {
+      border-color: rgba(168, 85, 247, 0.5);
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(139, 92, 246, 0.1));
+      box-shadow: 0 20px 60px rgba(168, 85, 247, 0.15);
+    }
+
+    /* Card 2: Blue gradient */
+    .project-card:nth-child(2) {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(96, 165, 250, 0.15));
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    body.light-mode .project-card:nth-child(2) {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(96, 165, 250, 0.05));
+      border-color: rgba(59, 130, 246, 0.25);
+    }
+
+    .project-card:nth-child(2):hover {
+      border-color: rgba(59, 130, 246, 0.8);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(96, 165, 250, 0.25));
+      box-shadow: 0 20px 60px rgba(59, 130, 246, 0.4);
+      transform: translateY(-8px) scale(1.02);
+    }
+
+    body.light-mode .project-card:nth-child(2):hover {
+      border-color: rgba(59, 130, 246, 0.5);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(96, 165, 250, 0.1));
+      box-shadow: 0 20px 60px rgba(59, 130, 246, 0.15);
+    }
+
+    /* Card 3: Pink gradient */
+    .project-card:nth-child(3) {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(244, 63, 94, 0.15));
+      border-color: rgba(236, 72, 153, 0.4);
+    }
+
+    body.light-mode .project-card:nth-child(3) {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.08), rgba(244, 63, 94, 0.05));
+      border-color: rgba(236, 72, 153, 0.25);
+    }
+
+    .project-card:nth-child(3):hover {
+      border-color: rgba(236, 72, 153, 0.8);
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(244, 63, 94, 0.25));
+      box-shadow: 0 20px 60px rgba(236, 72, 153, 0.4);
+      transform: translateY(-8px) scale(1.02);
+    }
+
+    body.light-mode .project-card:nth-child(3):hover {
+      border-color: rgba(236, 72, 153, 0.5);
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(244, 63, 94, 0.1));
+      box-shadow: 0 20px 60px rgba(236, 72, 153, 0.15);
+    }
+
+    /* Card 4: Cyan gradient */
+    .project-card:nth-child(4) {
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(0, 184, 212, 0.15));
+      border-color: rgba(34, 211, 238, 0.4);
+    }
+
+    body.light-mode .project-card:nth-child(4) {
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(0, 184, 212, 0.05));
+      border-color: rgba(34, 211, 238, 0.25);
+    }
+
+    .project-card:nth-child(4):hover {
+      border-color: rgba(34, 211, 238, 0.8);
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.3), rgba(0, 184, 212, 0.25));
+      box-shadow: 0 20px 60px rgba(34, 211, 238, 0.4);
+      transform: translateY(-8px) scale(1.02);
+    }
+
+    body.light-mode .project-card:nth-child(4):hover {
+      border-color: rgba(34, 211, 238, 0.5);
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(0, 184, 212, 0.1));
+      box-shadow: 0 20px 60px rgba(34, 211, 238, 0.15);
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .project-card:hover::before {
+      opacity: 1;
+    }
+
+    .project-tag {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 4px;
+      transition: color 0.3s ease;
+    }
+
+    .project-card:nth-child(1) .project-tag {
+      color: rgba(168, 85, 247, 0.9);
+    }
+
+    body.light-mode .project-card:nth-child(1) .project-tag {
+      color: rgba(139, 92, 246, 0.85);
+    }
+
+    .project-card:nth-child(2) .project-tag {
+      color: rgba(59, 130, 246, 0.9);
+    }
+
+    body.light-mode .project-card:nth-child(2) .project-tag {
+      color: rgba(59, 130, 246, 0.85);
+    }
+
+    .project-card:nth-child(3) .project-tag {
+      color: rgba(236, 72, 153, 0.9);
+    }
+
+    body.light-mode .project-card:nth-child(3) .project-tag {
+      color: rgba(236, 72, 153, 0.85);
+    }
+
+    .project-card:nth-child(4) .project-tag {
+      color: rgba(34, 211, 238, 0.9);
+    }
+
+    body.light-mode .project-card:nth-child(4) .project-tag {
+      color: rgba(34, 211, 238, 0.85);
+    }
+
+    .project-title {
+      font-size: 1.35rem;
+      margin-bottom: 12px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ffffff, rgba(255, 255, 255, 0.8));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transition: background 0.3s ease;
+    }
+
+    body.light-mode .project-title {
+      background: linear-gradient(135deg, #1f2937, rgba(31, 41, 55, 0.8));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .project-text {
+      font-size: 0.95rem;
+      color: rgba(148, 163, 184, 0.9);
+      line-height: 1.6;
+      flex: 1;
+      transition: color 0.3s ease;
+    }
+
+    body.light-mode .project-text {
+      color: rgba(75, 85, 99, 0.85);
+    }
+
+    .project-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: auto;
+    }
+
+    .project-content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 6px 14px;
+      border: 1px solid;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: default;
+    }
+
+    .chip:hover {
+      transform: translateY(-3px) scale(1.08);
+      box-shadow: 0 8px 20px currentColor;
+      filter: brightness(1.2);
+    }
+
+    .project-card:nth-child(1) .chip {
+      border-color: rgba(168, 85, 247, 0.5);
+      background: rgba(168, 85, 247, 0.1);
+      color: rgba(168, 85, 247, 0.95);
+    }
+
+    body.light-mode .project-card:nth-child(1) .chip {
+      border-color: rgba(168, 85, 247, 0.3);
+      background: rgba(168, 85, 247, 0.08);
+      color: rgba(139, 92, 246, 0.85);
+    }
+
+    .project-card:nth-child(2) .chip {
+      border-color: rgba(59, 130, 246, 0.5);
+      background: rgba(59, 130, 246, 0.1);
+      color: rgba(59, 130, 246, 0.95);
+    }
+
+    body.light-mode .project-card:nth-child(2) .chip {
+      border-color: rgba(59, 130, 246, 0.3);
+      background: rgba(59, 130, 246, 0.08);
+      color: rgba(59, 130, 246, 0.85);
+    }
+
+    .project-card:nth-child(3) .chip {
+      border-color: rgba(236, 72, 153, 0.5);
+      background: rgba(236, 72, 153, 0.1);
+      color: rgba(236, 72, 153, 0.95);
+    }
+
+    body.light-mode .project-card:nth-child(3) .chip {
+      border-color: rgba(236, 72, 153, 0.3);
+      background: rgba(236, 72, 153, 0.08);
+      color: rgba(236, 72, 153, 0.85);
+    }
+
+    .project-card:nth-child(4) .chip {
+      border-color: rgba(34, 211, 238, 0.5);
+      background: rgba(34, 211, 238, 0.1);
+      color: rgba(34, 211, 238, 0.95);
+    }
+
+    body.light-mode .project-card:nth-child(4) .chip {
+      border-color: rgba(34, 211, 238, 0.3);
+      background: rgba(34, 211, 238, 0.08);
+      color: rgba(34, 211, 238, 0.85);
+    }
+
+    /* Card 5: Emerald gradient */
+    .project-card:nth-child(5) {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(52, 211, 153, 0.15));
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    body.light-mode .project-card:nth-child(5) {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(52, 211, 153, 0.05));
+      border-color: rgba(16, 185, 129, 0.25);
+    }
+
+    .project-card:nth-child(5):hover {
+      border-color: rgba(16, 185, 129, 0.8);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(52, 211, 153, 0.25));
+      box-shadow: 0 20px 60px rgba(16, 185, 129, 0.4);
+      transform: translateY(-8px) scale(1.02);
+    }
+
+    body.light-mode .project-card:nth-child(5):hover {
+      border-color: rgba(16, 185, 129, 0.5);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(52, 211, 153, 0.1));
+      box-shadow: 0 20px 60px rgba(16, 185, 129, 0.15);
+    }
+
+    .project-card:nth-child(5) .project-tag {
+      color: rgba(16, 185, 129, 0.9);
+    }
+
+    body.light-mode .project-card:nth-child(5) .project-tag {
+      color: rgba(16, 185, 129, 0.85);
+    }
+
+    .project-card:nth-child(5) .chip {
+      border-color: rgba(16, 185, 129, 0.5);
+      background: rgba(16, 185, 129, 0.1);
+      color: rgba(16, 185, 129, 0.95);
+    }
+
+    body.light-mode .project-card:nth-child(5) .chip {
+      border-color: rgba(16, 185, 129, 0.3);
+      background: rgba(16, 185, 129, 0.08);
+      color: rgba(16, 185, 129, 0.85);
+    }
+
+    /* Card 6: Amber gradient */
+    .project-card:nth-child(6) {
+      background: linear-gradient(135deg, rgba(217, 119, 6, 0.2), rgba(245, 158, 11, 0.15));
+      border-color: rgba(217, 119, 6, 0.4);
+    }
+
+    body.light-mode .project-card:nth-child(6) {
+      background: linear-gradient(135deg, rgba(217, 119, 6, 0.08), rgba(245, 158, 11, 0.05));
+      border-color: rgba(217, 119, 6, 0.25);
+    }
+
+    .project-card:nth-child(6):hover {
+      border-color: rgba(217, 119, 6, 0.8);
+      background: linear-gradient(135deg, rgba(217, 119, 6, 0.3), rgba(245, 158, 11, 0.25));
+      box-shadow: 0 20px 60px rgba(217, 119, 6, 0.4);
+      transform: translateY(-8px) scale(1.02);
+    }
+
+    body.light-mode .project-card:nth-child(6):hover {
+      border-color: rgba(217, 119, 6, 0.5);
+      background: linear-gradient(135deg, rgba(217, 119, 6, 0.15), rgba(245, 158, 11, 0.1));
+      box-shadow: 0 20px 60px rgba(217, 119, 6, 0.15);
+    }
+
+    .project-card:nth-child(6) .project-tag {
+      color: rgba(217, 119, 6, 0.9);
+    }
+
+    body.light-mode .project-card:nth-child(6) .project-tag {
+      color: rgba(217, 119, 6, 0.85);
+    }
+
+    .project-card:nth-child(6) .chip {
+      border-color: rgba(217, 119, 6, 0.5);
+      background: rgba(217, 119, 6, 0.1);
+      color: rgba(217, 119, 6, 0.95);
+    }
+
+    body.light-mode .project-card:nth-child(6) .chip {
+      border-color: rgba(217, 119, 6, 0.3);
+      background: rgba(217, 119, 6, 0.08);
+      color: rgba(217, 119, 6, 0.85);
+    }
+
+    /* Card 7: Rose gradient */
+    .project-card:nth-child(7) {
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.2), rgba(219, 39, 119, 0.15));
+      border-color: rgba(244, 63, 94, 0.4);
+    }
+
+    body.light-mode .project-card:nth-child(7) {
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.08), rgba(219, 39, 119, 0.05));
+      border-color: rgba(244, 63, 94, 0.25);
+    }
+
+    .project-card:nth-child(7):hover {
+      border-color: rgba(244, 63, 94, 0.8);
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.3), rgba(219, 39, 119, 0.25));
+      box-shadow: 0 20px 60px rgba(244, 63, 94, 0.4);
+      transform: translateY(-8px) scale(1.02);
+    }
+
+    body.light-mode .project-card:nth-child(7):hover {
+      border-color: rgba(244, 63, 94, 0.5);
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.15), rgba(219, 39, 119, 0.1));
+      box-shadow: 0 20px 60px rgba(244, 63, 94, 0.15);
+    }
+
+    .project-card:nth-child(7) .project-tag {
+      color: rgba(244, 63, 94, 0.9);
+    }
+
+    body.light-mode .project-card:nth-child(7) .project-tag {
+      color: rgba(244, 63, 94, 0.85);
+    }
+
+    .project-card:nth-child(7) .chip {
+      border-color: rgba(244, 63, 94, 0.5);
+      background: rgba(244, 63, 94, 0.1);
+      color: rgba(244, 63, 94, 0.95);
+    }
+
+    body.light-mode .project-card:nth-child(7) .chip {
+      border-color: rgba(244, 63, 94, 0.3);
+      background: rgba(244, 63, 94, 0.08);
+      color: rgba(244, 63, 94, 0.85);
+    }
+
+    /* Card 8: Indigo gradient */
+    .project-card:nth-child(8) {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(129, 140, 248, 0.15));
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+
+    body.light-mode .project-card:nth-child(8) {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(129, 140, 248, 0.05));
+      border-color: rgba(99, 102, 241, 0.25);
+    }
+
+    .project-card:nth-child(8):hover {
+      border-color: rgba(99, 102, 241, 0.8);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(129, 140, 248, 0.25));
+      box-shadow: 0 20px 60px rgba(99, 102, 241, 0.4);
+      transform: translateY(-8px) scale(1.02);
+    }
+
+    body.light-mode .project-card:nth-child(8):hover {
+      border-color: rgba(99, 102, 241, 0.5);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(129, 140, 248, 0.1));
+      box-shadow: 0 20px 60px rgba(99, 102, 241, 0.15);
+    }
+
+    .project-card:nth-child(8) .project-tag {
+      color: rgba(99, 102, 241, 0.9);
+    }
+
+    body.light-mode .project-card:nth-child(8) .project-tag {
+      color: rgba(99, 102, 241, 0.85);
+    }
+
+    .project-card:nth-child(8) .chip {
+      border-color: rgba(99, 102, 241, 0.5);
+      background: rgba(99, 102, 241, 0.1);
+      color: rgba(99, 102, 241, 0.95);
+    }
+
+    body.light-mode .project-card:nth-child(8) .chip {
+      border-color: rgba(99, 102, 241, 0.3);
+      background: rgba(99, 102, 241, 0.08);
+      color: rgba(99, 102, 241, 0.85);
+    }
+
+    .project-btn {
+      font-size: 0.8rem;
+      border-radius: 999px;
+      padding: 6px 12px;
+      border: none;
+      background: radial-gradient(circle at 0 0, var(--accent-3), var(--accent-2));
+      color: #020617;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(79, 70, 229, 0.9);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.5s ease, height 0.5s ease;
+    }
+
+    .project-btn:hover::after {
+      width: 300px;
+      height: 300px;
+    }
+
+    body.light-mode .project-btn {
+      color: #ffffff;
+      box-shadow: 0 12px 30px rgba(139, 92, 246, 0.5);
+    }
+
+    .project-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 18px 45px rgba(79, 70, 229, 1);
+    }
+
+    .project-btn span {
+      position: relative;
+      z-index: 1;
+    }
+
+    body.light-mode .project-btn:hover {
+      box-shadow: 0 18px 45px rgba(139, 92, 246, 0.6);
+    }
+
+    .projects-nav-btn {
+      display: none;
+    }
+
+    .project-screen {
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+      font-size: 0.72rem;
+      color: rgba(148, 163, 184, 0.7);
+    }
+
+    .project-screen .bar {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      padding: 6px;
+      background: rgba(30, 41, 59, 0.8);
+      border-radius: 6px;
+    }
+
+    .project-screen .box {
+      border-radius: 8px;
+      border: 1px dashed rgba(148, 163, 184, 0.3);
+      padding: 8px;
+      background: rgba(15, 23, 42, 0.4);
+    }
+
+    .project-screen code {
+      color: rgba(168, 85, 247, 0.8);
+      font-size: 0.7rem;
+    }
+
+    /* Contact */
+    .contact-card {
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.22), transparent 65%), var(--bg-soft-2);
+      border-radius: var(--card-radius);
+      padding: 22px 24px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 28px;
+    }
+
+    @media (max-width: 900px) {
+      .contact-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .contact-meta {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .contact-list {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .contact-list li span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-right: 6px;
+    }
+
+    .socials {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .social-pill {
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 10px;
+      font-size: 0.86rem;
+    }
+
+    .contact-form label {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      padding: 9px 11px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.86rem;
+    }
+
+    .contact-form textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .contact-form button {
+      justify-self: flex-start;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 900px) {
+      .contact-form button {
+        justify-self: stretch;
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+    footer {
+      padding-top: 26px;
+      font-size: 0.8rem;
+      color: #6b7280;
+      text-align: center;
+    }
+
+    /* Reveal on scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Tech stack – solar system orbit */
+    #stack {
+      text-align: center;
+    }
+
+    .stack-subtitle {
+      font-size: 0.92rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto 24px;
+    }
+
+    .stack-orbit-wrapper {
+      margin-top: 32px;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .stack-orbit {
+      position: relative;
+      width: min(500px, 95vw);
+      height: 500px;
+    }
+
+    /* Orbital path lines (dotted circles) */
+    .orbit-paths {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      pointer-events: none;
+      z-index: 1;
+      color: var(--muted);
+    }
+
+    /* Center planet (sun) - stays in middle */
+    .center-planet {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px;
+      height: 100px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 20% 0, #4df3ff, #7c3aed);
+      box-shadow:
+        0 0 40px rgba(129, 140, 248, 0.9),
+        0 0 90px rgba(56, 189, 248, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      animation: planetPulse 3s ease-in-out infinite;
+      transition: box-shadow 0.4s ease;
+    }
+
+    body.light-mode .center-planet {
+      box-shadow:
+        0 0 40px rgba(139, 92, 246, 0.6),
+        0 0 90px rgba(59, 130, 246, 0.4);
+    }
+
+    .center-planet-inner {
+      width: 70px;
+      height: 70px;
+      border-radius: inherit;
+      background: radial-gradient(circle at 30% 0, #111827, #020617);
+      border: 2px solid rgba(148, 163, 184, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    body.light-mode .center-planet-inner {
+      background: radial-gradient(circle at 30% 0, #f3f4f6, #e5e7eb);
+      border-color: rgba(107, 114, 128, 0.4);
+    }
+
+    /* Orbital rings (visual guide) */
+    .orbit-ring {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      border-radius: 999px;
+      pointer-events: none;
+      transition: border-color 0.4s ease;
+    }
+
+    body.light-mode .orbit-ring {
+      border-color: rgba(107, 114, 128, 0.1);
+    }
+
+    .orbit-ring.ring-1 {
+      width: 200px;
+      height: 200px;
+    }
+
+    .orbit-ring.ring-2 {
+      width: 300px;
+      height: 300px;
+    }
+
+    .orbit-ring.ring-3 {
+      width: 400px;
+      height: 400px;
+    }
+
+    /* Orbit layers - container for rotating icons */
+    .orbit-layer {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 999px;
+      pointer-events: none;
+    }
+
+    .orbit-layer.layer-1 {
+      width: 200px;
+      height: 200px;
+      animation: orbitRotate 20s linear infinite;
+    }
+
+    .orbit-layer.layer-2 {
+      width: 300px;
+      height: 300px;
+      animation: orbitRotate 30s linear infinite reverse;
+    }
+
+    .orbit-layer.layer-3 {
+      width: 400px;
+      height: 400px;
+      animation: orbitRotate 40s linear infinite;
+    }
+
+    /* Individual orbit icons positioned in circle */
+    .orbit-icon {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0, #1f2937, #020617);
+      border: 1.5px solid rgba(148, 163, 184, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.95);
+      pointer-events: auto;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      left: 50%;
+      top: 50%;
+      margin: -25px 0 0 -25px;
+    }
+
+    .orbit-icon::after {
+      content: attr(title);
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .orbit-icon:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-5px);
+    }
+
+    .orbit-icon:hover {
+      box-shadow: 0 0 30px rgba(96, 165, 250, 1), 0 0 60px rgba(129, 140, 248, 0.6);
+      border-color: rgba(248, 250, 252, 1);
+      transform: scale(1.15);
+    }
+
+    /* Position icons equally around their orbits using nth-child transforms */
+    /* Layer 1: 3 icons, 120° apart */
+    .layer-1 .orbit-icon:nth-child(1) {
+      transform: rotate(0deg) translateY(-100px) rotate(0deg);
+    }
+
+    .layer-1 .orbit-icon:nth-child(2) {
+      transform: rotate(120deg) translateY(-100px) rotate(-120deg);
+    }
+
+    .layer-1 .orbit-icon:nth-child(3) {
+      transform: rotate(240deg) translateY(-100px) rotate(-240deg);
+    }
+
+    /* Layer 2: 4 icons, 90° apart */
+    .layer-2 .orbit-icon:nth-child(1) {
+      transform: rotate(0deg) translateY(-150px) rotate(0deg);
+    }
+
+    .layer-2 .orbit-icon:nth-child(2) {
+      transform: rotate(90deg) translateY(-150px) rotate(-90deg);
+    }
+
+    .layer-2 .orbit-icon:nth-child(3) {
+      transform: rotate(180deg) translateY(-150px) rotate(-180deg);
+    }
+
+    .layer-2 .orbit-icon:nth-child(4) {
+      transform: rotate(270deg) translateY(-150px) rotate(-270deg);
+    }
+
+    /* Layer 3: 4 icons, 90° apart */
+    .layer-3 .orbit-icon:nth-child(1) {
+      transform: rotate(45deg) translateY(-200px) rotate(-45deg);
+    }
+
+    .layer-3 .orbit-icon:nth-child(2) {
+      transform: rotate(135deg) translateY(-200px) rotate(-135deg);
+    }
+
+    .layer-3 .orbit-icon:nth-child(3) {
+      transform: rotate(225deg) translateY(-200px) rotate(-225deg);
+    }
+
+    .layer-3 .orbit-icon:nth-child(4) {
+      transform: rotate(315deg) translateY(-200px) rotate(-315deg);
+    }
+
+    .orbit-labels {
+      margin-top: 32px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .orbit-chip {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text);
+      font-size: 0.75rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    body.light-mode .orbit-chip {
+      border-color: rgba(107, 114, 128, 0.3);
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    .orbit-chip:hover {
+      border-color: rgba(148, 163, 184, 0.8);
+      background: rgba(15, 23, 42, 1);
+    }
+
+    body.light-mode .orbit-chip:hover {
+      border-color: rgba(107, 114, 128, 0.6);
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    /* Animations */
+    @keyframes planetPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 40px rgba(129, 140, 248, 0.9), 0 0 90px rgba(56, 189, 248, 0.8);
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      50% {
+        box-shadow: 0 0 50px rgba(129, 140, 248, 1), 0 0 110px rgba(56, 189, 248, 1);
+        transform: translate(-50%, -50%) scale(1.05);
+      }
+    }
+
+    @keyframes orbitRotate {
+      from {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+
+      to {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .stack-orbit {
+        width: min(400px, 95vw);
+        height: 400px;
+      }
+
+      .orbit-ring.ring-1 {
+        width: 160px;
+        height: 160px;
+      }
+
+      .orbit-ring.ring-2 {
+        width: 240px;
+        height: 240px;
+      }
+
+      .orbit-ring.ring-3 {
+        width: 320px;
+        height: 320px;
+      }
+
+      .orbit-layer.layer-1 {
+        width: 160px;
+        height: 160px;
+      }
+
+      .orbit-layer.layer-2 {
+        width: 240px;
+        height: 240px;
+      }
+
+      .orbit-layer.layer-3 {
+        width: 320px;
+        height: 320px;
+      }
+
+      .layer-1 .orbit-icon:nth-child(1) {
+        transform: rotate(0deg) translateY(-80px) rotate(0deg);
+      }
+
+      .layer-1 .orbit-icon:nth-child(2) {
+        transform: rotate(120deg) translateY(-80px) rotate(-120deg);
+      }
+
+      .layer-1 .orbit-icon:nth-child(3) {
+        transform: rotate(240deg) translateY(-80px) rotate(-240deg);
+      }
+
+      .layer-2 .orbit-icon:nth-child(1) {
+        transform: rotate(0deg) translateY(-120px) rotate(0deg);
+      }
+
+      .layer-2 .orbit-icon:nth-child(2) {
+        transform: rotate(90deg) translateY(-120px) rotate(-90deg);
+      }
+
+      .layer-2 .orbit-icon:nth-child(3) {
+        transform: rotate(180deg) translateY(-120px) rotate(-180deg);
+      }
+
+      .layer-2 .orbit-icon:nth-child(4) {
+        transform: rotate(270deg) translateY(-120px) rotate(-270deg);
+      }
+
+      .layer-3 .orbit-icon:nth-child(1) {
+        transform: rotate(45deg) translateY(-160px) rotate(-45deg);
+      }
+
+      .layer-3 .orbit-icon:nth-child(2) {
+        transform: rotate(135deg) translateY(-160px) rotate(-135deg);
+      }
+
+      .layer-3 .orbit-icon:nth-child(3) {
+        transform: rotate(225deg) translateY(-160px) rotate(-225deg);
+      }
+
+      .layer-3 .orbit-icon:nth-child(4) {
+        transform: rotate(315deg) translateY(-160px) rotate(-315deg);
+      }
+
+      .center-planet {
+        width: 80px;
+        height: 80px;
+      }
+
+      .center-planet-inner {
+        width: 55px;
+        height: 55px;
+        font-size: 1.5rem;
+      }
+
+      .orbit-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .stack-orbit {
+        width: min(300px, 95vw);
+        height: 300px;
+      }
+
+      .orbit-ring.ring-1 {
+        width: 120px;
+        height: 120px;
+      }
+
+      .orbit-ring.ring-2 {
+        width: 180px;
+        height: 180px;
+      }
+
+      .orbit-ring.ring-3 {
+        width: 240px;
+        height: 240px;
+      }
+
+      .orbit-layer.layer-1 {
+        width: 120px;
+        height: 120px;
+      }
+
+      .orbit-layer.layer-2 {
+        width: 180px;
+        height: 180px;
+      }
+
+      .orbit-layer.layer-3 {
+        width: 240px;
+        height: 240px;
+      }
+
+      .layer-1 .orbit-icon:nth-child(1) {
+        transform: rotate(0deg) translateY(-60px) rotate(0deg);
+      }
+
+      .layer-1 .orbit-icon:nth-child(2) {
+        transform: rotate(120deg) translateY(-60px) rotate(-120deg);
+      }
+
+      .layer-1 .orbit-icon:nth-child(3) {
+        transform: rotate(240deg) translateY(-60px) rotate(-240deg);
+      }
+
+      .layer-2 .orbit-icon:nth-child(1) {
+        transform: rotate(0deg) translateY(-90px) rotate(0deg);
+      }
+
+      .layer-2 .orbit-icon:nth-child(2) {
+        transform: rotate(90deg) translateY(-90px) rotate(-90deg);
+      }
+
+      .layer-2 .orbit-icon:nth-child(3) {
+        transform: rotate(180deg) translateY(-90px) rotate(-180deg);
+      }
+
+      .layer-2 .orbit-icon:nth-child(4) {
+        transform: rotate(270deg) translateY(-90px) rotate(-270deg);
+      }
+
+      .layer-3 .orbit-icon:nth-child(1) {
+        transform: rotate(45deg) translateY(-120px) rotate(-45deg);
+      }
+
+      .layer-3 .orbit-icon:nth-child(2) {
+        transform: rotate(135deg) translateY(-120px) rotate(-135deg);
+      }
+
+      .layer-3 .orbit-icon:nth-child(3) {
+        transform: rotate(225deg) translateY(-120px) rotate(-225deg);
+      }
+
+      .layer-3 .orbit-icon:nth-child(4) {
+        transform: rotate(315deg) translateY(-120px) rotate(-315deg);
+      }
+
+      .center-planet {
+        width: 70px;
+        height: 70px;
+      }
+
+      .center-planet-inner {
+        width: 48px;
+        height: 48px;
+        font-size: 1.3rem;
+      }
+
+      .orbit-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+        margin: -19px 0 0 -19px;
+      }
+    }
+
+    /* Accessibility & Focus States */
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--accent-3);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* Reduce motion for accessibility */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+
+      .scroll-rail,
+      header,
+      .theme-toggle,
+      nav {
+        display: none !important;
+      }
+
+      a {
+        color: #0066cc;
+        text-decoration: underline;
+      }
+
+      section {
+        page-break-inside: avoid;
+      }
+    }
+
+    /* Ultra-small screens */
+    @media (max-width: 360px) {
+      .page-wrap {
+        padding: 12px 12px 40px;
+      }
+
+      header {
+        gap: 12px;
+        padding: 10px 12px;
+      }
+
+      .hero-title {
+        font-size: clamp(1.8rem, 3vw, 2.4rem);
+      }
+
+      .section-title {
+        font-size: 1.2rem;
+      }
+
+      nav ul {
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Scroll Line -->
+  <div class="scroll-rail" id="scrollRail">
+    <div class="rail-progress" id="railProgress"></div>
+    <div class="rail-dot" data-target="hero" style="top: 4%;">
+      <span>Hero</span>
+    </div>
+    <div class="rail-dot" data-target="about" style="top: 22%;">
+      <span>About</span>
+    </div>
+    <div class="rail-dot" data-target="experience" style="top: 40%;">
+      <span>Experience</span>
+    </div>
+    <div class="rail-dot" data-target="stack" style="top: 58%;">
+      <span>Tech Stack</span>
+    </div>
+    <div class="rail-dot" data-target="projects" style="top: 76%;">
+      <span>Projects</span>
+    </div>
+    <div class="rail-dot" data-target="contact" style="top: 94%;">
+      <span>Contact</span>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <header>
+      <div class="logo">
+        <div class="logo-mark">S</div>
+        <span>Web-Dev</span>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#stack">Stack</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode">🌙</button>
+    </header>
+
+    <!-- HERO -->
+    <main>
+      <section class="hero reveal" id="hero">
+        <div>
+          <div class="hero-badge">
+            <div class="hero-badge-dot"></div>
+            Currently building backend systems & APIs
+          </div>
+          <h1 class="hero-title">
+            I <span class="gradient">build</span> reliable web systems<br />
+            and share what I <span class="gradient">learn.</span>
+          </h1>
+          <p class="hero-sub">
+            Hey, I’m <strong>Swapnanil</strong> — a web developer who leans toward the backend,
+            building clean APIs, scalable architectures, and reliable web experiences.
+          </p>
+          <div class="hero-tags">
+            <span class="tag-pill">Backend • Django • REST</span>
+            <span class="tag-pill">Frontend • HTML • CSS • JS</span>
+            <span class="tag-pill">Database • PostgreSQL • MySQL</span>
+          </div>
+          <div class="hero-actions">
+            <a href="https://github.com/swapnanil99" target="_blank" class="btn btn-primary">
+              <span>View GitHub</span><span>↗</span>
+            </a>
+            <a href="#contact" class="btn btn-outline">
+              <span>Get in touch</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <div class="avatar-wrap">
+            <div class="avatar-ring"></div>
+            <svg class="avatar-vector" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <!-- Gradient definitions -->
+              <defs>
+                <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#a855f7;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="screenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#0891b2;stop-opacity:1" />
+                </linearGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                  <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              <!-- Head -->
+              <circle cx="100" cy="60" r="28" fill="url(#bodyGradient)" opacity="0.9" />
+
+              <!-- Body -->
+              <rect x="70" y="90" width="60" height="50" rx="8" fill="url(#bodyGradient)" opacity="0.85" />
+
+              <!-- Arms -->
+              <rect x="40" y="95" width="30" height="18" rx="9" fill="url(#bodyGradient)" opacity="0.8" />
+              <rect x="130" y="95" width="30" height="18" rx="9" fill="url(#bodyGradient)" opacity="0.8" />
+
+              <!-- Laptop Screen -->
+              <rect x="55" y="100" width="90" height="55" rx="6" fill="url(#screenGradient)" opacity="0.95"
+                filter="url(#glow)" />
+
+              <!-- Screen border -->
+              <rect x="55" y="100" width="90" height="55" rx="6" fill="none" stroke="#4df3ff" stroke-width="2"
+                opacity="0.6" />
+
+              <!-- Code lines on screen -->
+              <line x1="65" y1="115" x2="135" y2="115" stroke="#020617" stroke-width="2" opacity="0.7" />
+              <line x1="65" y1="125" x2="125" y2="125" stroke="#020617" stroke-width="2" opacity="0.6" />
+              <line x1="65" y1="135" x2="130" y2="135" stroke="#020617" stroke-width="2" opacity="0.6" />
+              <line x1="65" y1="145" x2="115" y2="145" stroke="#020617" stroke-width="2" opacity="0.5" />
+
+              <!-- Keyboard -->
+              <rect x="60" y="155" width="80" height="12" rx="2" fill="url(#bodyGradient)" opacity="0.7" />
+
+              <!-- Keyboard keys -->
+              <circle cx="70" cy="161" r="2.5" fill="#4df3ff" opacity="0.6" />
+              <circle cx="80" cy="161" r="2.5" fill="#4df3ff" opacity="0.6" />
+              <circle cx="90" cy="161" r="2.5" fill="#4df3ff" opacity="0.6" />
+              <circle cx="100" cy="161" r="2.5" fill="#4df3ff" opacity="0.6" />
+              <circle cx="110" cy="161" r="2.5" fill="#4df3ff" opacity="0.6" />
+              <circle cx="120" cy="161" r="2.5" fill="#4df3ff" opacity="0.6" />
+              <circle cx="130" cy="161" r="2.5" fill="#4df3ff" opacity="0.6" />
+
+              <!-- Floating code brackets -->
+              <g opacity="0.4" class="floating-bracket">
+                <text x="30" y="50" font-size="24" font-family="monospace" fill="#4df3ff">&lt;</text>
+                <text x="150" y="170" font-size="24" font-family="monospace" fill="#a855f7">/&gt;</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT / EXPERIENCE -->
+      <section id="about" class="reveal">
+        <p class="section-label">About</p>
+        <h2 class="section-title">A bit about me</h2>
+        <div class="section-grid">
+          <div class="card">
+            <div class="card-content">
+              <p class="about-text">
+                I’m a self-taught backend-focused web developer who loves transforming complex requirements into
+                reliable, scalable systems. I specialize in designing clean database schemas, expressive REST APIs, and
+                background processes that quietly power great user experiences.
+                <br /><br />
+                When I’m not building production backends, I explore small side projects, contribute to open source, and
+                share what I learn through practical code snippets and tutorials.
+              </p>
+            </div>
+          </div>
+
+          <div class="card" id="experience">
+            <div class="card-content">
+              <p class="section-label">Experience</p>
+              <div class="timeline">
+                <div class="timeline-item">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-role">Backend Developer • Freelance</div>
+                  <div class="timeline-company">Remote / Contract</div>
+                  <div class="timeline-date">2024 — Present</div>
+                  <p class="timeline-desc">
+                    Designing and building REST APIs, authentication systems, and admin
+                    dashboards for small products and startups. Focus on Python, Django and
+                    PostgreSQL.
+                  </p>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-role">Full-Stack Web Developer</div>
+                  <div class="timeline-company">Personal & open-source projects</div>
+                  <div class="timeline-date">2023 — present</div>
+                  <p class="timeline-desc">
+                    Shipped multiple side projects: real-time chat apps, dashboards,
+                    and learning tools using Django, Channels, DRF and modern frontend stacks.
+                  </p>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-role">Learning & Building</div>
+                  <div class="timeline-company">CS fundamentals, algorithms, tooling</div>
+                  <div class="timeline-date">Ongoing</div>
+                  <p class="timeline-desc">
+                    Constantly improving in systems design, testing, observability, and
+                    dev-ops basics to build backends that are not just working, but
+                    maintainable.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TECH STACK -->
+      <section id="stack" class="reveal">
+        <p class="section-label">Tech Stack</p>
+        <h2 class="section-title">My little backend solar system</h2>
+        <p class="stack-subtitle">
+          Python at the core, Django and REST shaping the orbit, with databases, caching, and real-time tooling
+          revolving around to keep everything running smoothly.
+        </p>
+
+        <div class="stack-orbit-wrapper">
+          <div class="stack-orbit">
+            <!-- Orbital path lines (dotted) -->
+            <svg class="orbit-paths" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
+              <!-- Inner orbit path -->
+              <circle cx="250" cy="250" r="100" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-dasharray="5,5" opacity="0.3" />
+              <!-- Middle orbit path -->
+              <circle cx="250" cy="250" r="150" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-dasharray="5,5" opacity="0.3" />
+              <!-- Outer orbit path -->
+              <circle cx="250" cy="250" r="200" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-dasharray="5,5" opacity="0.3" />
+            </svg>
+
+            <!-- center planet -->
+            <div class="center-planet">
+              <div class="center-planet-inner">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+                  <defs>
+                    <linearGradient id="serverGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1">
+                        <animate attributeName="stop-color" values="#06b6d4;#8b5cf6;#ec4899;#06b6d4" dur="8s"
+                          repeatCount="indefinite" />
+                      </stop>
+                      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1">
+                        <animate attributeName="stop-color" values="#8b5cf6;#ec4899;#06b6d4;#8b5cf6" dur="8s"
+                          repeatCount="indefinite" />
+                      </stop>
+                    </linearGradient>
+                    <linearGradient id="dataFlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" style="stop-color:#4df3ff;stop-opacity:0" />
+                      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#f97316;stop-opacity:0" />
+                    </linearGradient>
+                    <filter id="serverGlow">
+                      <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                      <feMerge>
+                        <feMergeNode in="coloredBlur" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
+                  </defs>
+
+                  <!-- Server Rack (3 servers stacked) -->
+                  <g>
+                    <!-- Server 1 (top) -->
+                    <rect x="25" y="25" width="50" height="12" rx="2" fill="url(#serverGradient)" opacity="0.85"
+                      filter="url(#serverGlow)" />
+                    <rect x="25" y="25" width="50" height="12" rx="2" fill="none" stroke="#4df3ff" stroke-width="0.5"
+                      opacity="0.6" />
+                    <!-- Server lights -->
+                    <circle cx="32" cy="31" r="1.5" fill="#10b981">
+                      <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="38" cy="31" r="1.5" fill="#10b981">
+                      <animate attributeName="opacity" values="1;0.3;1" dur="2s" begin="0.2s"
+                        repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="44" cy="31" r="1.5" fill="#eab308">
+                      <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite" />
+                    </circle>
+
+                    <!-- Server 2 (middle) -->
+                    <rect x="25" y="40" width="50" height="12" rx="2" fill="url(#serverGradient)" opacity="0.85"
+                      filter="url(#serverGlow)" />
+                    <rect x="25" y="40" width="50" height="12" rx="2" fill="none" stroke="#8b5cf6" stroke-width="0.5"
+                      opacity="0.6" />
+                    <circle cx="32" cy="46" r="1.5" fill="#10b981">
+                      <animate attributeName="opacity" values="1;0.3;1" dur="2s" begin="0.4s"
+                        repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="38" cy="46" r="1.5" fill="#10b981">
+                      <animate attributeName="opacity" values="1;0.3;1" dur="2s" begin="0.6s"
+                        repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="44" cy="46" r="1.5" fill="#10b981">
+                      <animate attributeName="opacity" values="1;0.3;1" dur="2s" begin="0.8s"
+                        repeatCount="indefinite" />
+                    </circle>
+
+                    <!-- Server 3 (bottom) -->
+                    <rect x="25" y="55" width="50" height="12" rx="2" fill="url(#serverGradient)" opacity="0.85"
+                      filter="url(#serverGlow)" />
+                    <rect x="25" y="55" width="50" height="12" rx="2" fill="none" stroke="#ec4899" stroke-width="0.5"
+                      opacity="0.6" />
+                    <circle cx="32" cy="61" r="1.5" fill="#10b981">
+                      <animate attributeName="opacity" values="1;0.3;1" dur="2s" begin="1s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="38" cy="61" r="1.5" fill="#eab308">
+                      <animate attributeName="opacity" values="0.3;1;0.3" dur="1.8s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="44" cy="61" r="1.5" fill="#10b981">
+                      <animate attributeName="opacity" values="1;0.3;1" dur="2s" begin="1.2s"
+                        repeatCount="indefinite" />
+                    </circle>
+                  </g>
+
+                  <!-- Database icon (bottom) -->
+                  <g>
+                    <ellipse cx="50" cy="72" rx="15" ry="5" fill="url(#serverGradient)" opacity="0.8"
+                      filter="url(#serverGlow)" />
+                    <rect x="35" y="72" width="30" height="8" fill="url(#serverGradient)" opacity="0.8" />
+                    <ellipse cx="50" cy="80" rx="15" ry="5" fill="url(#serverGradient)" opacity="0.9"
+                      filter="url(#serverGlow)" />
+                    <ellipse cx="50" cy="72" rx="15" ry="5" fill="none" stroke="#4df3ff" stroke-width="0.5"
+                      opacity="0.6" />
+                    <ellipse cx="50" cy="80" rx="15" ry="5" fill="none" stroke="#4df3ff" stroke-width="0.5"
+                      opacity="0.6" />
+
+                    <!-- Database activity indicator -->
+                    <circle cx="50" cy="76" r="2" fill="#10b981">
+                      <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite" />
+                      <animate attributeName="r" values="2;3;2" dur="1.5s" repeatCount="indefinite" />
+                    </circle>
+                  </g>
+
+                  <!-- Data flow lines (from servers to database) -->
+                  <g opacity="0.7">
+                    <!-- Flow line 1 -->
+                    <line x1="50" y1="37" x2="50" y2="72" stroke="url(#dataFlow)" stroke-width="1.5"
+                      stroke-dasharray="4,4">
+                      <animate attributeName="stroke-dashoffset" from="0" to="8" dur="1s" repeatCount="indefinite" />
+                    </line>
+                    <!-- Flow line 2 (angled) -->
+                    <line x1="40" y1="52" x2="45" y2="72" stroke="url(#dataFlow)" stroke-width="1.5"
+                      stroke-dasharray="4,4">
+                      <animate attributeName="stroke-dashoffset" from="0" to="8" dur="1.2s" repeatCount="indefinite" />
+                    </line>
+                    <!-- Flow line 3 (angled) -->
+                    <line x1="60" y1="52" x2="55" y2="72" stroke="url(#dataFlow)" stroke-width="1.5"
+                      stroke-dasharray="4,4">
+                      <animate attributeName="stroke-dashoffset" from="0" to="8" dur="0.9s" repeatCount="indefinite" />
+                    </line>
+                  </g>
+
+                  <!-- Floating data particles -->
+                  <g>
+                    <circle cx="30" cy="45" r="1" fill="#4df3ff" opacity="0.8">
+                      <animate attributeName="cy" values="45;70;45" dur="3s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0;0.8;0" dur="3s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="70" cy="50" r="1" fill="#a855f7" opacity="0.8">
+                      <animate attributeName="cy" values="50;75;50" dur="3.5s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0;0.8;0" dur="3.5s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="50" cy="40" r="1" fill="#f97316" opacity="0.8">
+                      <animate attributeName="cy" values="40;68;40" dur="2.8s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0;0.8;0" dur="2.8s" repeatCount="indefinite" />
+                    </circle>
+                  </g>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Orbit rings + icons -->
+            <div class="orbit-layer layer-1">
+              <div class="orbit-icon" title="Python">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="pythonBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#3776AB;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#366994;stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="pythonYellow" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#FFD43B;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#FFC331;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <!-- Python official logo -->
+                  <g transform="translate(50, 50) scale(0.8)">
+                    <!-- Blue snake (top left) -->
+                    <path
+                      d="M -15 -30 L -5 -30 Q 0 -30 0 -25 L 0 -10 L -10 -10 L -10 -5 L 5 -5 L 5 -20 Q 5 -30 -5 -30 L -15 -30 Q -25 -30 -25 -20 L -25 0 L -20 0 L -20 -15 Q -20 -20 -15 -20 L -10 -20 L -10 -25 L -15 -25 Q -20 -25 -20 -20 L -20 -5 Q -20 0 -15 0 L 0 0 L 0 5 L -15 5 Q -25 5 -25 -5 L -25 -20 Q -25 -30 -15 -30 Z"
+                      fill="url(#pythonBlue)" />
+
+                    <!-- Yellow snake (bottom right) -->
+                    <path
+                      d="M 15 30 L 5 30 Q 0 30 0 25 L 0 10 L 10 10 L 10 5 L -5 5 L -5 20 Q -5 30 5 30 L 15 30 Q 25 30 25 20 L 25 0 L 20 0 L 20 15 Q 20 20 15 20 L 10 20 L 10 25 L 15 25 Q 20 25 20 20 L 20 5 Q 20 0 15 0 L 0 0 L 0 -5 L 15 -5 Q 25 -5 25 5 L 25 20 Q 25 30 15 30 Z"
+                      fill="url(#pythonYellow)" />
+
+                    <!-- Eyes -->
+                    <circle cx="-12" cy="-22" r="2" fill="#fff" />
+                    <circle cx="12" cy="22" r="2" fill="#fff" />
+                  </g>
+                </svg>
+              </div>
+              <div class="orbit-icon" title="Django">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="10" y="10" width="80" height="80" fill="#092E20" rx="5" /><text x="50" y="60" font-size="36"
+                    font-weight="bold" fill="#fff" text-anchor="middle" font-family="Arial">DJ</text>
+                </svg>
+              </div>
+              <div class="orbit-icon" title="REST API">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="apiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#7B68EE;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="50" cy="50" r="45" fill="url(#apiGrad)" /><text x="50" y="58" font-size="32"
+                    font-weight="bold" fill="#fff" text-anchor="middle" font-family="Arial">API</text>
+                </svg>
+              </div>
+            </div>
+
+            <div class="orbit-layer layer-2">
+              <div class="orbit-icon" title="SQL / PostgreSQL">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="50" cy="50" r="45" fill="#336791" /><text x="50" y="58" font-size="28" font-weight="bold"
+                    fill="#fff" text-anchor="middle" font-family="Arial">SQL</text>
+                </svg>
+              </div>
+              <div class="orbit-icon" title="WebSocket / Real-time">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="wsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#FF8E53;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="50" cy="50" r="45" fill="url(#wsGrad)" /><text x="50" y="58" font-size="20"
+                    font-weight="bold" fill="#fff" text-anchor="middle" font-family="Arial">WebSocket</text>
+                </svg>
+              </div>
+              <div class="orbit-icon" title="Redis / Caching">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="50" cy="50" r="45" fill="#DC382D" /><text x="50" y="58" font-size="28" font-weight="bold"
+                    fill="#fff" text-anchor="middle" font-family="Arial">Redis</text>
+                </svg>
+              </div>
+              <div class="orbit-icon" title="GitHub">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="50" cy="50" r="45" fill="#24292e" />
+                  <!-- GitHub Octocat logo -->
+                  <path
+                    d="M 50 25 C 36 25 25 36 25 50 C 25 61 32 70 42 73 C 43 73 44 72 44 71 L 44 67 C 40 68 39 65 39 65 C 38 63 37 62 37 62 C 35 61 37 61 37 61 C 39 61 40 63 40 63 C 42 66 45 65 46 64 C 46 63 47 62 48 61 C 42 60 36 58 36 50 C 36 47 37 45 39 43 C 38 42 38 40 39 37 C 39 37 41 36 44 38 C 46 37 48 37 50 37 C 52 37 54 37 56 38 C 59 36 61 37 61 37 C 62 40 62 42 61 43 C 63 45 64 48 64 50 C 64 58 58 60 52 61 C 53 62 54 63 54 65 L 54 71 C 54 72 55 73 57 73 C 67 70 75 61 75 50 C 75 36 64 25 50 25 Z"
+                    fill="#fff" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="orbit-layer layer-3">
+              <div class="orbit-icon" title="HTML5">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <path fill="#E34C26" d="M20,20 L80,20 L75,75 L50,85 L25,75 Z" /><text x="50" y="60" font-size="30"
+                    font-weight="bold" fill="#fff" text-anchor="middle" font-family="Arial">HTML</text>
+                </svg>
+              </div>
+              <div class="orbit-icon" title="CSS3">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <path fill="#1572B6" d="M20,20 L80,20 L75,75 L50,85 L25,75 Z" /><text x="50" y="60" font-size="30"
+                    font-weight="bold" fill="#fff" text-anchor="middle" font-family="Arial">CSS</text>
+                </svg>
+              </div>
+              <div class="orbit-icon" title="JavaScript">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="15" y="15" width="70" height="70" fill="#F7DF1E" rx="3" /><text x="50" y="60" font-size="36"
+                    font-weight="bold" fill="#000" text-anchor="middle" font-family="Arial">JS</text>
+                </svg>
+              </div>
+              <div class="orbit-icon" title="Git">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="50" cy="50" r="45" fill="#F1502F" />
+                  <circle cx="35" cy="35" r="8" fill="#fff" />
+                  <circle cx="65" cy="35" r="8" fill="#fff" />
+                  <circle cx="50" cy="65" r="8" fill="#fff" />
+                  <line x1="42" y1="42" x2="58" y2="42" stroke="#fff" stroke-width="1.5" />
+                  <line x1="42" y1="58" x2="58" y2="58" stroke="#fff" stroke-width="1.5" />
+                  <line x1="50" y1="43" x2="50" y2="57" stroke="#fff" stroke-width="1.5" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="orbit-labels">
+          <span class="orbit-chip">Python · Django</span>
+          <span class="orbit-chip">Django REST Framework</span>
+          <span class="orbit-chip">PostgreSQL · Redis</span>
+          <span class="orbit-chip">Django Channels · WebSockets</span>
+          <span class="orbit-chip">HTML · CSS · JavaScript</span>
+          <span class="orbit-chip">Git · GitHub</span>
+        </div>
+      </section>
+
+
+      <!-- PROJECTS -->
+      <section id="projects" class="reveal">
+        <p class="section-label"
+          style="text-align: center; font-size: 14px; letter-spacing: 0.2em; margin-bottom: 16px;">PROJECTS</p>
+        <h2 class="section-title">Major Projects</h2>
+
+        <!-- Featured Projects -->
+        <div class="featured-projects">
+          <div class="featured-project-card">
+            <div class="featured-project-image">
+              <img src="chatroom.png" alt="Realtime Chatroom project">
+            </div>
+            <div class="featured-project-content">
+              <div class="featured-project-tag">Major Project</div>
+              <h3 class="featured-project-title">Realtime Chatroom</h3>
+              <p class="featured-project-desc">
+                A WhatsApp-style web chat built with Django Channels and WebSockets. Features multiple rooms, typing
+                indicators, and message persistence.
+              </p>
+              <div class="featured-project-techs">
+                <span class="featured-project-tech">Django</span>
+                <span class="featured-project-tech">WebSocket</span>
+                <span class="featured-project-tech">Redis</span>
+              </div>
+              <a href="https://github.com/swapnanil99/ChatRoom.git" target="_blank" style="text-decoration: none;">
+                <button class="project-btn">View code →</button>
+              </a>
+            </div>
+          </div>
+
+          <div class="featured-project-card">
+            <div class="featured-project-image">
+              <img src="tech-review.png" alt="Tech Review API project">
+            </div>
+            <div class="featured-project-content">
+              <div class="featured-project-tag">Major Project</div>
+              <h3 class="featured-project-title">Tech Review API</h3>
+              <p class="featured-project-desc">
+                A modern tech-review website delivering fast, responsive, and easy-to-update product reviews built with
+                HTML, CSS, REST API, and Django.
+              </p>
+              <div class="featured-project-techs">
+                <span class="featured-project-tech">REST API</span>
+                <span class="featured-project-tech">DJANGO</span>
+                <span class="featured-project-tech">PostgreSQL</span>
+              </div>
+              <a href="https://github.com/swapnanil99/techreview.git" target="_blank" style="text-decoration: none;">
+                <button class="project-btn">View code →</button>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- All Projects Section with Filter -->
+        <div style="margin-top: 48px; margin-bottom: 32px;">
+          <h3 style="font-size: 1.2rem; color: var(--text); margin-bottom: 24px; font-weight: 600;">Mini Projects</h3>
+
+          <!-- Filter Buttons -->
+          <div class="filter-buttons" style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 32px;">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="backend">Backend</button>
+            <button class="filter-btn" data-filter="fullstack">Full Stack</button>
+            <button class="filter-btn" data-filter="frontend">Frontend</button>
+            <button class="filter-btn" data-filter="tools">Tools</button>
+          </div>
+        </div>
+
+        <div class="projects-grid" id="projectsGrid">
+          <!-- Backend Projects -->
+          <article class="project-card" data-category="backend">
+            <div class="project-content">
+              <p class="project-tag">Backend</p>
+              <h3 class="project-title">Login service</h3>
+              <p class="project-text">
+                Production-ready REST API with JWT authentication, rate limiting, and comprehensive error
+                handling
+              </p>
+            </div>
+            <div class="project-meta">
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <span class="chip">Python</span>
+                <span class="chip">Django</span>
+                <span class="chip">PostgreSQL</span>
+                <span class="chip">REST API</span>
+              </div>
+              <a href="https://github.com/swapnanil99/login_system.git" target="_blank" style="text-decoration: none;">
+                <button class="project-btn">View code →</button>
+              </a>
+            </div>
+          </article>
+
+          <article class="project-card" data-category="backend">
+            <div class="project-content">
+              <p class="project-tag">Backend</p>
+              <h3 class="project-title">Microservices Architecture</h3>
+              <p class="project-text">
+                Scalable microservices platform with message queuing, service discovery, and distributed tracing.
+                Implements CQRS pattern for high-throughput operations.
+              </p>
+            </div>
+            <div class="project-meta">
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <span class="chip">Python</span>
+                <span class="chip">RabbitMQ</span>
+                <span class="chip">MongoDB</span>
+                <span class="chip">Kubernetes</span>
+              </div>
+              <a href="https://github.com/swapnanil99" target="_blank" style="text-decoration: none;">
+                <button class="project-btn">View code →</button>
+              </a>
+            </div>
+          </article>
+
+          <!-- Full Stack Projects -->
+          <article class="project-card" data-category="fullstack">
+            <div class="project-content">
+              <p class="project-tag">Full Stack</p>
+              <h3 class="project-title">Realtime-Writeboard</h3>
+              <p class="project-text">
+                A real-time writeboard with chat application , user behavior tracking, and export
+                capabilities. WebSocket integration for live updates.
+              </p>
+            </div>
+            <div class="project-meta">
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <span class="chip">React</span>
+                <span class="chip">Django</span>
+                <span class="chip">WebSocket</span>
+              </div>
+              <a href="https://github.com/swapnanil99/Realtime-Writeboard-with-chat.git" target="_blank"
+                style="text-decoration: none;">
+                <button class="project-btn">View code →</button>
+              </a>
+            </div>
+          </article>
+
+          <article class="project-card" data-category="fullstack">
+            <div class="project-content">
+              <p class="project-tag">Full Stack</p>
+              <h3 class="project-title">E-Commerce Platform</h3>
+              <p class="project-text">
+                Complete e-commerce solution with product catalog, shopping cart, payment integration, order tracking,
+                and admin dashboard for inventory management.
+              </p>
+            </div>
+            <div class="project-meta">
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <span class="chip">React</span>
+                <span class="chip">Node.js</span>
+                <span class="chip">Stripe API</span>
+                <span class="chip">MongoDB</span>
+              </div>
+              <a href="https://github.com/swapnanil99" target="_blank" style="text-decoration: none;">
+                <button class="project-btn">View code →</button>
+              </a>
+            </div>
+          </article>
+
+          <!-- Frontend Projects -->
+          <article class="project-card" data-category="frontend">
+            <div class="project-content">
+              <p class="project-tag">Frontend</p>
+              <h3 class="project-title">portfolio</h3>
+              <p class="project-text">
+                A web portfolio built to represent my work and demonstrate modern UI + backend skills.
+              </p>
+            </div>
+            <div class="project-meta">
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <span class="chip">HTML</span>
+                <span class="chip">CSS</span>
+                <span class="chip">JS</span>
+                <span class="chip">Testing</span>
+              </div>
+              <a href="https://github.com/swapnanil99" target="_blank" style="text-decoration: none;">
+                <button class="project-btn">View code →</button>
+              </a>
+            </div>
+          </article>
+
+          <article class="project-card" data-category="frontend">
+            <div class="project-content">
+              <p class="project-tag">Frontend</p>
+              <h3 class="project-title">Data Visualization App</h3>
+              <p class="project-text">
+                Interactive data visualization platform with multiple chart types, real-time updates, and export to
+                PDF/CSV functionality.
+              </p>
+            </div>
+            <div class="project-meta">
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <span class="chip">React</span>
+                <span class="chip">Chart.js</span>
+                <span class="chip">D3.js</span>
+                <span class="chip">Plotly</span>
+              </div>
+              <a href="https://github.com/swapnanil99" target="_blank" style="text-decoration: none;">
+                <button class="project-btn">View code →</button>
+              </a>
+            </div>
+          </article>
+
+          <!-- Tools & Utilities -->
+          <article class="project-card" data-category="tools">
+            <div class="project-content">
+              <p class="project-tag">Open Source</p>
+              <h3 class="project-title">Django Middleware</h3>
+              <p class="project-text">
+                Lightweight middleware package for Django providing request logging, performance monitoring, and
+                security headers. 95% test coverage.
+              </p>
+            </div>
+            <div class="project-meta">
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <span class="chip">Django</span>
+                <span class="chip">Python</span>
+                <span class="chip">PyPI</span>
+              </div>
+              <a href="https://github.com/swapnanil99" target="_blank" style="text-decoration: none;">
+                <button class="project-btn">View code →</button>
+              </a>
+            </div>
+          </article>
+
+          <article class="project-card" data-category="tools">
+            <div class="project-content">
+              <p class="project-tag">Tools</p>
+              <h3 class="project-title">NPX swapnanil</h3>
+              <p class="project-text">
+                A fun and interactive command-line business card built with Node.js.
+              </p>
+            </div>
+            <div class="project-meta">
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <span class="chip">Node.js</span>
+                <span class="chip">Click</span>
+                <span class="chip">NPM package</span>
+              </div>
+              <a href="https://github.com/swapnanil99" target="_blank" style="text-decoration: none;">
+                <button class="project-btn">View code →</button>
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact" class="reveal">
+        <p class="section-label">Contact</p>
+        <h2 class="section-title">Let’s build something</h2>
+        <div class="contact-card">
+          <div class="contact-grid">
+            <div>
+              <p class="contact-meta">
+                I’m open to freelance backend work, collaborations, or just chatting
+                about ideas and architecture. The fastest way to reach me is via email,
+                but you can also ping me on GitHub.
+              </p>
+              <ul class="contact-list">
+                <li>
+                  <span>📧</span> <strong>Email:</strong> abmcodehub@gmail.com
+                </li>
+                <li>
+                  <span>🐱</span> <strong>GitHub:</strong>
+                  <a href="https://github.com/swapnanil99" target="_blank">github.com/swapnanil99</a>
+                </li>
+              </ul>
+              <div class="socials">
+                <a class="social-pill" href="#" onclick="return false;">Instagram</a>
+                <a class="social-pill" href="#" onclick="return false;">Twitter</a>
+                <a class="social-pill" href="#" onclick="return false;">LinkedIn</a>
+              </div>
+            </div>
+            <form class="contact-form" action="https://formspree.io/f/xjknoeln" method="POST">
+              <div>
+                <label for="name">Name</label>
+                <input id="name" type="text" name="name" placeholder="Your name" required />
+              </div>
+              <div>
+                <label for="email">Email</label>
+                <input id="email" type="email" name="email" placeholder="you@example.com" required />
+              </div>
+              <div>
+                <label for="message">Message</label>
+                <textarea id="message" name="message" placeholder="Tell me about your project or question..."
+                  required></textarea>
+              </div>
+              <button class="btn btn-primary" type="submit">
+                <span>Send message</span> <span>✉️</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © <span id="year"></span> Swapnanil • Crafted with Python, Django & a bit of caffeine.
+    </footer>
+  </div>
+
+  <script>
+    // Set current year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Smooth scroll for nav + dots (for older browsers)
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener("click", function (e) {
+        const targetId = this.getAttribute("href").substring(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+
+    // Scroll line progress + active dots
+    const rail = document.getElementById("scrollRail");
+    const progress = document.getElementById("railProgress");
+    const dots = document.querySelectorAll(".rail-dot");
+    const sections = {};
+    dots.forEach((dot) => {
+      const id = dot.getAttribute("data-target");
+      sections[id] = document.getElementById(id);
+      // click on dot to scroll
+      dot.addEventListener("click", () => {
+        if (sections[id]) {
+          sections[id].scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+
+    function handleScroll() {
+      const doc = document.documentElement;
+      const scrollTop = doc.scrollTop || document.body.scrollTop;
+      const scrollHeight = doc.scrollHeight - doc.clientHeight;
+      const scrolled = scrollHeight > 0 ? scrollTop / scrollHeight : 0;
+
+      progress.style.height = (scrolled * 100) + "%";
+
+      if (scrollTop > 60) rail.classList.add("active");
+      else rail.classList.remove("active");
+
+      // Activate dot by nearest section
+      dots.forEach((dot) => dot.classList.remove("active"));
+      Object.entries(sections).forEach(([id, el]) => {
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const center = window.innerHeight / 2;
+        if (rect.top <= center && rect.bottom >= center * 0.5) {
+          const activeDot = document.querySelector('.rail-dot[data-target="' + id + '"]');
+          if (activeDot) activeDot.classList.add("active");
+        }
+      });
+    }
+
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("load", handleScroll);
+
+    // Theme Toggle
+    const themeToggle = document.getElementById("themeToggle");
+    const savedTheme = localStorage.getItem("theme") || "dark";
+
+    if (savedTheme === "light") {
+      document.documentElement.classList.add("light-mode");
+      document.body.classList.add("light-mode");
+      themeToggle.textContent = "☀️";
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const isLightMode = document.documentElement.classList.toggle("light-mode");
+      document.body.classList.toggle("light-mode");
+
+      if (isLightMode) {
+        localStorage.setItem("theme", "light");
+        themeToggle.textContent = "☀️";
+      } else {
+        localStorage.setItem("theme", "dark");
+        themeToggle.textContent = "🌙";
+      }
+    });
+
+    // Project Filter
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    const projectCards = document.querySelectorAll(".project-card");
+    const featuredCards = document.querySelectorAll(".featured-project-card");
+
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        // Remove active class from all buttons
+        filterBtns.forEach((b) => b.classList.remove("active"));
+        // Add active class to clicked button
+        btn.classList.add("active");
+
+        // Button click animation
+        btn.style.transform = "scale(0.9)";
+        setTimeout(() => {
+          btn.style.transform = "scale(1)";
+        }, 150);
+
+        const filter = btn.getAttribute("data-filter");
+
+        // Featured projects ALWAYS show - don't touch their display property
+        featuredCards.forEach((card) => {
+          card.style.opacity = "1";
+        });
+
+        // Filter logic for regular projects using data-category
+        projectCards.forEach((card, index) => {
+          const category = card.getAttribute("data-category");
+          let shouldShow = false;
+
+          if (filter === "all") {
+            shouldShow = true;
+          } else if (filter === category) {
+            shouldShow = true;
+          }
+
+          if (shouldShow) {
+            card.style.display = "flex";
+            card.style.transform = "scale(0.8) translateY(20px)";
+            card.style.opacity = "0";
+            setTimeout(() => {
+              card.style.transition = "all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)";
+              card.style.transform = "scale(1) translateY(0)";
+              card.style.opacity = "1";
+            }, index * 80);
+          } else {
+            card.style.transition = "all 0.3s ease";
+            card.style.transform = "scale(0.8) translateY(-20px)";
+            card.style.opacity = "0";
+            setTimeout(() => card.style.display = "none", 300);
+          }
+        });
+      });
+    });
+
+    // Reveal on scroll
+    const reveals = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.18 }
+    );
+    reveals.forEach((el) => observer.observe(el));
+  </script>
+</body>
+
+</html>
