@@ -275,6 +275,44 @@
       box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
     }
 
+    /* Right Side Controls */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-left: 8px;
+    }
+
+    .resume-btn {
+      padding: 8px 20px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: none;
+      border-radius: 999px;
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+      font-family: inherit;
+    }
+
+    .resume-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+    }
+
+    body.light-mode .resume-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.25);
+    }
+
+    body.light-mode .resume-btn:hover {
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    }
+
     /* Theme Toggle Button */
     .theme-toggle {
       background: rgba(79, 70, 229, 0.2);
@@ -2577,13 +2615,12 @@
 
   <div class="page-wrap">
     <header>
-      <div class="logo">
+      <a href="#hero" class="logo">
         <div class="logo-mark">S</div>
         <span>Web-Dev</span>
-      </div>
+      </a>
       <nav>
         <ul>
-          <li><a href="#hero">Home</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#experience">Experience</a></li>
           <li><a href="#stack">Stack</a></li>
@@ -2591,7 +2628,10 @@
           <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
-      <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode">🌙</button>
+      <div class="header-right">
+        <a href="resume.pdf" target="_blank" class="resume-btn">Resume</a>
+        <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode">🌙</button>
+      </div>
     </header>
 
     <!-- HERO -->
@@ -3311,7 +3351,7 @@
               </p>
               <ul class="contact-list">
                 <li>
-                  <span>📧</span> <strong>Email:</strong> abmcodehub@gmail.com
+                  <span>📧</span> <strong>Email:</strong> swapnanilmaity99@gmail.com
                 </li>
                 <li>
                   <span>🐱</span> <strong>GitHub:</strong>
